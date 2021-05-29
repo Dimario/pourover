@@ -1,16 +1,11 @@
 <template>
-  pourover
+  <Pourover />
 </template>
 <script lang="ts">
-import { Events } from "@/const";
-import bus from "@/lib/bus";
-import { useRouter } from "vue-router";
-import { ref } from "vue";
+import Pourover from "@/components/Pourover.vue";
 
 export default {
   name: "Mainpage",
-  setup() {
-
-  },
+  components: { Pourover },
 };
 </script>
