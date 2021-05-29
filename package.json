@@ -17,6 +17,7 @@
     "eslint-plugin-vue": "^7.9.0",
     "mitt": "^2.1.0",
     "prettier": "^2.3.0",
+    "tsparticles": "^1.27.0",
     "vue": "^3.0.5",
     "vuex": "^4.0.0"
   },

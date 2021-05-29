@@ -22,6 +22,7 @@
 <script lang="ts">
 import Functions from "@/classes/Functions";
 import { reactive, ref } from "vue";
+import bus from "@/lib/bus";
 
 interface Filler {
   color: string;
@@ -119,6 +120,12 @@ export default {
           flasks[clickFlask.value]["in"].splice(0, 1);
           flasks[index]["in"].unshift(activeColor);
           clickFlask.value = -2;
+
+          //TODO: Проверять выстроили 4 в колбу
+          bus.$emit("confetti-play");
+          setTimeout(() => {
+            bus.$emit("confetti-end");
+          }, 500);
         } else {
           window.navigator.vibrate(200);
           clickFlask.value = -2;
