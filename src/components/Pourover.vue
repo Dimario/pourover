@@ -1,41 +1,34 @@
 <template>
-  <div ref="popover">
-    <h1 style="text-align: center; margin-bottom: 50px">
-      Pourover {{ clickFlask.value }}
-    </h1>
-
-    <div class="flasks">
+  <div class="flasks">
+    <div
+      v-for="(flask, index) in flasks"
+      :key="`flask-${index}`"
+      class="flask"
+      :class="{ active: clickFlask == index }"
+      @click="clickFlaskHandler(index)"
+    >
       <div
-        v-for="(flask, index) in flasks"
-        :key="`flask-${index}`"
-        class="flask"
-        :class="{ active: clickFlask == index }"
-        @click="clickFlaskHandler(index)"
-      >
-        <div
-          v-for="(item, itemIndex) in flask.in"
-          :key="`flask-item-${item}`"
-          class="flask-item"
-          :style="`background-color: ${item.color}; top: ${getPosition(
-            itemIndex,
-            flask
-          )}`"
-        ></div>
-      </div>
+        v-for="(item, itemIndex) in flask.in"
+        :key="`flask-item-${item}`"
+        class="flask-item"
+        :style="`background-color: ${item.color}; top: ${getPosition(
+          itemIndex,
+          flask
+        )}`"
+      ></div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import Functions from "@/classes/Functions";
 import { reactive, ref } from "vue";
-import { onMounted } from "vue";
-
-interface Flask {
-  in: any;
-}
 
 interface Filler {
   color: string;
+}
+
+interface Flask {
+  in: Filler[];
 }
 
 const minCountFlask = 4;
@@ -50,24 +43,16 @@ const FillerPosition = ["170px", "110px", "55px", "0px"];
 export default {
   name: "Pourover",
   setup() {
-    let flasks: Flask[] = reactive(generateFlask()),
-      needColor = flasks.length - 2,
-      colours: Filler[] = reactive(generateColor()),
-      clickFlask = ref<number>(-1);
+    const flasks: Flask[] = reactive(generateFlask());
+    const needColor = flasks.length - 2;
+    const colours: Filler[] = reactive(generateColor());
+    const clickFlask = ref<number>(-1);
 
-    //Разливаем
-    pour();
-
-    onMounted(() => {});
-
-    /**
-     * Генерируем кол.во колб
-     */
     function generateFlask(): Flask[] {
-      let tmpFlasks = [],
-        i;
+      let tmpFlasks: Flask[] = [];
+      let i: number = 1;
 
-      for (i = 1; i <= countFlask; i++) {
+      for (i; i <= countFlask; i++) {
         tmpFlasks.push({
           in: [],
         });
@@ -76,9 +61,6 @@ export default {
       return tmpFlasks;
     }
 
-    /**
-     * Генерируем цвета
-     */
     function generateColor(): Filler[] {
       let tmp: Filler[] = [],
         i;
@@ -95,11 +77,8 @@ export default {
       return tmp;
     }
 
-    /**
-     * Наливаем в колбы
-     */
-    function pour() {
-      let item;
+    function pour(): void {
+      let item: string;
 
       for (item in flasks) {
         if (Number(item) < needColor) {
@@ -108,15 +87,12 @@ export default {
       }
     }
 
-    /**
-     * Берем 4 случайных цвета
-     */
-    function getRandomColor() {
-      let tmpColor = [],
-        i;
+    function getRandomColor(): Filler[] {
+      let tmpColor: Filler[] = [],
+        i: number = 1;
 
-      for (i = 1; i <= 4; i++) {
-        let colorElement = Functions.math().randomInteger(
+      for (i; i <= 4; i++) {
+        let colorElement: number = Functions.math().randomInteger(
           0,
           colours.length - 1
         );
@@ -127,19 +103,14 @@ export default {
       return tmpColor;
     }
 
-    function clickFlaskHandler(index: number) {
-      let activeColor;
+    function clickFlaskHandler(index: number): void {
+      let activeColor: Filler | undefined;
 
       if (flasks[clickFlask.value]) {
-        activeColor = flasks[clickFlask.value]["in"]["0"];
+        activeColor = flasks[clickFlask.value]["in"][0];
       }
 
-      if (clickFlask.value === -1) {
-        clickFlask.value = index;
-      } else if (clickFlask.value === index) {
-        clickFlask.value = -1;
-      } else {
-        //Проверка на подходящий ли цвет или пустую ячеку.
+      if (activeColor) {
         if (
           (!flasks[index]["in"][0] ||
             activeColor.color == flasks[index]["in"][0].color) &&
@@ -147,12 +118,15 @@ export default {
         ) {
           flasks[clickFlask.value]["in"].splice(0, 1);
           flasks[index]["in"].unshift(activeColor);
-          clickFlask.value = -1;
+          clickFlask.value = -2;
         } else {
           window.navigator.vibrate(200);
-          clickFlask.value = -1;
+          clickFlask.value = -2;
         }
       }
+
+      clickFlask.value =
+        clickFlask.value === index || clickFlask.value === -2 ? -1 : index;
     }
 
     function getPosition(
@@ -162,6 +136,8 @@ export default {
       index = item.in.length - index - 1;
       return FillerPosition[index];
     }
+
+    pour();
 
     return {
       flasks,
@@ -173,13 +149,13 @@ export default {
   },
 };
 </script>
-
-<style>
+<style scoped>
 .flasks {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .flask {
   padding: 5px;
   width: 60px;
@@ -195,6 +171,7 @@ export default {
   box-sizing: border-box;
   justify-content: flex-end;
 }
+
 .flask-item {
   width: 45px;
   height: 45px;
@@ -203,7 +180,6 @@ export default {
   box-sizing: border-box;
   top: 0;
   margin: 10px 0 0 0;
-  transition: all 0.3s ease;
 }
 
 .flask.active .flask-item:nth-child(1) {
