@@ -447,3 +447,11 @@ input{
         transform: translate3d(4px, 0, 0);
     }
 }
+
+body{
+    height: 100vh;
+}
+
+#app{
+    height: 100%;
+}

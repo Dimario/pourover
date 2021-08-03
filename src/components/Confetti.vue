@@ -136,7 +136,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 #confetti {
   position: fixed;
   width: 100%;
