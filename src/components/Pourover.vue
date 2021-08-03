@@ -1,5 +1,5 @@
 <template>
-  <div class="flasks">
+  <div class="flasks" :class="{ shake: actionError }">
     <div
       v-for="(flask, index) in flasks"
       :key="`flask-${index}`"
@@ -23,6 +23,9 @@
 import Functions from "@/classes/Functions";
 import { reactive, ref } from "vue";
 import bus from "@/lib/bus";
+
+const ERROR_TIME = 1000;
+const ERROR_VIBRATE_TIME = 200;
 
 interface Filler {
   color: string;
@@ -48,6 +51,7 @@ export default {
     const needColor = flasks.length - 2;
     const colours: Filler[] = reactive(generateColor());
     const clickFlask = ref<number>(-1);
+    const actionError = ref<boolean>(false);
 
     function generateFlask(): Flask[] {
       let tmpFlasks: Flask[] = [];
@@ -127,7 +131,11 @@ export default {
             bus.$emit("confetti-end");
           }, 500);
         } else {
-          window.navigator.vibrate(200);
+          actionError.value = true;
+          setTimeout(() => {
+            actionError.value = false;
+          }, ERROR_TIME);
+          window.navigator.vibrate(ERROR_VIBRATE_TIME);
           clickFlask.value = -2;
         }
       }
@@ -152,6 +160,7 @@ export default {
       clickFlask,
       clickFlaskHandler,
       getPosition,
+      actionError,
     };
   },
 };

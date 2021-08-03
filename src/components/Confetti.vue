@@ -3,7 +3,7 @@
 </template>
 <script lang="ts">
 import { tsParticles } from "tsparticles";
-import {onMounted} from 'vue';
+import { onMounted } from "vue";
 import bus from "@/lib/bus";
 
 export default {
@@ -13,22 +13,22 @@ export default {
       tsParticles.load("confetti", {
         fpsLimit: 60,
         fullScreen: {
-          enable: true
+          enable: true,
         },
         particles: {
           number: {
             value: 0,
-            zIndex: 100
+            zIndex: 100,
           },
           color: {
-            value: ["#00FFFC", "#FC00FF", "#fffc00"]
+            value: ["#00FFFC", "#FC00FF", "#fffc00"],
           },
           shape: {
             options: {
               confetti: {
-                type: ["circle", "square"]
-              }
-            }
+                type: ["circle", "square"],
+              },
+            },
           },
           opacity: {
             value: 1,
@@ -37,31 +37,31 @@ export default {
               minimumValue: 0,
               speed: 2,
               startValue: "max",
-              destroy: "min"
-            }
+              destroy: "min",
+            },
           },
           size: {
             value: 7,
             random: {
               enable: true,
-              minimumValue: 3
-            }
+              minimumValue: 3,
+            },
           },
           links: {
-            enable: false
+            enable: false,
           },
           life: {
             duration: {
               sync: true,
-              value: 5
+              value: 5,
             },
-            count: 1
+            count: 1,
           },
           move: {
             enable: true,
             gravity: {
               enable: true,
-              acceleration: 20
+              acceleration: 20,
             },
             speed: 20,
             decay: 0.1,
@@ -70,15 +70,15 @@ export default {
             straight: false,
             outModes: {
               default: "destroy",
-              top: "none"
-            }
-          }
+              top: "none",
+            },
+          },
         },
         interactivity: {
           detectsOn: "window",
           events: {
-            resize: true
-          }
+            resize: true,
+          },
         },
         detectRetina: true,
         emitters: {
@@ -92,36 +92,36 @@ export default {
                 enable: true,
                 offset: {
                   min: -1.4,
-                  max: 1.4
+                  max: 1.4,
                 },
                 speed: 0.1,
-                sync: false
+                sync: false,
               },
               l: {
                 enable: true,
                 offset: {
                   min: 20,
-                  max: 80
+                  max: 80,
                 },
                 speed: 0,
-                sync: false
-              }
-            }
+                sync: false,
+              },
+            },
           },
           life: {
             count: 0,
             duration: 0.1,
-            delay: 0.4
+            delay: 0.4,
           },
           rate: {
             delay: 0.1,
-            quantity: 100
+            quantity: 100,
           },
           size: {
             width: 0,
-            height: 0
-          }
-        }
+            height: 0,
+          },
+        },
       });
 
       const container = tsParticles.domItem(0);
@@ -132,10 +132,9 @@ export default {
       bus.$on("confetti-end", () => {
         container.pauseEmitter("party");
       });
-
-    })
-  }
-}
+    });
+  },
+};
 </script>
 <style>
 #confetti {
