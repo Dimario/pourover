@@ -125,18 +125,11 @@ export default {
           flasks[index]["in"].unshift(activeColor);
           clickFlask.value = -2;
 
-          //TODO: Проверять выстроили 4 в колбу
-          bus.$emit("confetti-play");
-          setTimeout(() => {
-            bus.$emit("confetti-end");
-          }, 500);
+          if (checkFullFlask(flasks[index])) {
+            confetti();
+          }
         } else {
-          actionError.value = true;
-          setTimeout(() => {
-            actionError.value = false;
-          }, ERROR_TIME);
-          window.navigator.vibrate(ERROR_VIBRATE_TIME);
-          clickFlask.value = -2;
+          gameError();
         }
       }
 
@@ -150,6 +143,30 @@ export default {
     ): typeof FillerPosition[number] {
       index = item.in.length - index - 1;
       return FillerPosition[index];
+    }
+
+    function checkFullFlask(flask: Flask): boolean {
+      if (flask.in.length && flask.in.length === 4) {
+        return true;
+      }
+
+      return false;
+    }
+
+    function confetti(time: number = 500): void {
+      bus.$emit("confetti-play");
+      setTimeout(() => {
+        bus.$emit("confetti-end");
+      }, time);
+    }
+
+    function gameError(): void {
+      actionError.value = true;
+      setTimeout(() => {
+        actionError.value = false;
+      }, ERROR_TIME);
+      window.navigator.vibrate(ERROR_VIBRATE_TIME);
+      clickFlask.value = -2;
     }
 
     pour();
